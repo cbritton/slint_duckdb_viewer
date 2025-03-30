@@ -1,0 +1,90 @@
+import { Button, VerticalBox, ComboBox, HorizontalBox, ProgressIndicator, StandardTableView, ScrollView, LineEdit,  StyleMetrics } from "std-widgets.slint";
+
+import { GlobalState } from "global.slint";
+import { Pagination } from "pagination.slint";
+
+export component HomePage inherits VerticalBox {
+
+    ProgressIndicator {
+        height: 1px;
+        indeterminate: GlobalState.page_loading;
+    }
+
+    HorizontalBox {
+        Button {
+            icon: @image-url("../assets/icons/file_icon.svg");
+            colorize-icon: true;
+            clicked() => {
+                GlobalState.open_file_async();
+            }
+        }
+        Text {
+            vertical-alignment: center;
+            text: GlobalState.filename;
+        }
+
+        Rectangle {}
+    }
+    
+    // table for the data
+    StandardTableView {
+        enabled: !GlobalState.page_loading;
+        horizontal-stretch: 1;
+        vertical-stretch: 1;
+        width: 100%;
+        columns: GlobalState.column_names;
+        rows: GlobalState.row_data;
+
+        sort-ascending(index) => {
+            // disallow sorting while loading
+            if (GlobalState.page_loading) {
+                return;
+            }
+            // add 1 to the index since duckdb is 1 based
+            GlobalState.sort_index = index + 1;
+            GlobalState.sort_order = 1;
+            GlobalState.page_loading = true;
+            GlobalState.pagination_enabled = false;
+            GlobalState.update_table_async();
+        }
+
+        sort-descending(index) => {
+            // disallow sorting while loading
+            if (GlobalState.page_loading) {
+                return;
+            }
+            // add 1 to the index since duckdb is 1 based
+            GlobalState.sort_index = index + 1;
+            GlobalState.sort_order = 2;
+            GlobalState.page_loading = true;
+            GlobalState.pagination_enabled = false;
+            GlobalState.update_table_async();
+        }
+    }
+
+    HorizontalBox {
+        spacing: StyleMetrics.layout-spacing;
+
+        // show total records
+        Text {
+            vertical-alignment: center;
+            text: GlobalState.record_count + " records";
+        }
+
+        // show process time
+        HorizontalBox {
+            alignment: start;
+            Text {
+                vertical-alignment: center;
+                text: "Process Time: "; 
+            }
+            Text {
+                vertical-alignment: center;
+                text: GlobalState.duration;
+            }
+        }
+        
+        // pagination component
+        Pagination { }
+    }
+}

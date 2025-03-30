@@ -1,0 +1,118 @@
+import { Button, VerticalBox, ComboBox, HorizontalBox, ProgressIndicator, StandardTableView, ScrollView, LineEdit } from "std-widgets.slint";
+
+import { GlobalState } from "global.slint";
+
+export component Pagination inherits HorizontalBox {
+    width: 20%;
+    padding: 0px;
+
+    in-out property<int> current-page <=> GlobalState.page_number;
+
+    ComboBox {
+        width: 100px;
+        model: [20, 50, 100];
+        enabled: GlobalState.pagination-enabled;
+        current-value: GlobalState.page_size;
+        property <int> local-value: GlobalState.page_size;
+        changed local-value => {
+            self.current-value = GlobalState.page_size;
+        }
+        selected(value) => {
+            GlobalState.page_size = value.to-float();
+            GlobalState.page_loading = true;
+            GlobalState.pagination_enabled = false;
+            GlobalState.page_number = 1;
+            GlobalState.update_table_async();
+        }
+    }
+
+    Button {
+        icon: @image-url("../assets/icons/left_double_chevron_icon.svg");
+        enabled: GlobalState.pagination-enabled && GlobalState.page_number > 1;
+        primary: false;
+        colorize-icon: true;
+        clicked() => {
+            if (GlobalState.page_number > 1) {
+                GlobalState.page_number = 1;
+                GlobalState.page_loading = true;
+                GlobalState.pagination_enabled = false;
+                GlobalState.update_table_async();
+            }
+        }
+    }
+
+    Button {
+        icon: @image-url("../assets/icons/left_chevron_icon.svg");
+        enabled: GlobalState.pagination-enabled && GlobalState.page_number > 1;
+        primary: false;
+        colorize-icon: true;
+        clicked() => {
+            if (GlobalState.page_number > 1) {
+                GlobalState.page_number -= 1;
+                GlobalState.page_loading = true;
+                GlobalState.pagination_enabled = false;
+                GlobalState.update_table_async();
+            }
+        }
+    }
+
+    Text {
+        vertical-alignment: center;
+        horizontal-alignment: right;
+        text: "Page";
+    }
+
+    LineEdit {
+        property <int> local-value: GlobalState.page_number;
+        changed local-value => {
+            self.text = GlobalState.page_number;
+        }
+        width: 100px;
+        enabled: GlobalState.pagination-enabled;
+        placeholder-text: "Page";
+        text: GlobalState.page_number;
+        input-type: number;
+        
+        accepted(value) => {
+            GlobalState.page_number = value.to-float();
+            GlobalState.page_loading = true;
+            GlobalState.pagination_enabled = false;
+            GlobalState.update_table_async();
+        }
+    }
+
+    Text {
+        vertical-alignment: center;
+        text: "of " + GlobalState.max_pages;
+    }
+
+    Button {
+        icon: @image-url("../assets/icons/chevron_right_icon.svg");
+        enabled: GlobalState.pagination-enabled && GlobalState.page_number < GlobalState.max_pages;
+        primary: false;
+        colorize-icon: true;
+        clicked() => {
+            if (GlobalState.page_number < GlobalState.max_pages) {
+                GlobalState.page_number += 1;
+                GlobalState.page_loading = true;
+                GlobalState.pagination_enabled = false;
+                GlobalState.update_table_async();
+            }
+        }
+    }
+
+    Button {
+        icon: @image-url("../assets/icons/double_chevron_right_icon.svg");
+        enabled: GlobalState.pagination-enabled && GlobalState.page_number < GlobalState.max_pages;
+        primary: false;
+        colorize-icon: true;
+        clicked() => {
+            if (GlobalState.page_number < GlobalState.max_pages) {
+                GlobalState.page_number = GlobalState.max_pages;
+                GlobalState.page_loading = true;
+                GlobalState.pagination_enabled = false;
+                GlobalState.update_table_async();
+            }
+        }
+    }
+}

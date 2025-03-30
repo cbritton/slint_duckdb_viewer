@@ -1,0 +1,83 @@
+import { Button, VerticalBox, Palette, StandardButton, ComboBox, HorizontalBox, SpinBox, StyleMetrics, AboutSlint, StandardTableView, ScrollView, ProgressIndicator, LineEdit, Switch, GridBox, GroupBox, LineEdit  } from "std-widgets.slint";
+
+import { GlobalState } from "global.slint";
+import { AboutPage } from "about.slint";
+import { SettingsPage } from "settings.slint";
+import { HomePage } from "home_page.slint";
+
+export { GlobalState }
+
+export component AppWindow inherits Window {
+    title: "Slint/DuckDB File Viewer";
+    
+    // Window size properties - set constraints to enable resizing
+    min-width: 400px;
+    min-height: 300px;
+    preferred-width: 800px;
+    preferred-height: 600px;
+    
+    callback exit-app();
+    callback show-error-dialog(error-message: string);
+
+    // Page state property
+    in-out property <string> current-page: "home";
+
+    //in-out property <string> error-message: GlobalState.error-message;
+    in-out property <bool> has-error: GlobalState.has_error;
+
+    changed has-error => {
+        debug("Has Error message : ", self.has-error);
+        debug("Error message : ", GlobalState.error-message);
+        if has-error {
+            self.show-error-dialog(GlobalState.error-message);
+        }
+    }
+    
+
+    MenuBar {
+        
+        Menu {
+            title: @tr("File");
+            MenuItem {
+                title: @tr("Home");
+                activated => {
+                    root.current-page = "home";
+                }
+            }
+
+            MenuItem {
+                title: @tr("Open");
+                activated => {
+                    GlobalState.open_file_async();
+                }
+            }
+
+            MenuItem {
+                title: @tr("Settings");
+                activated => {
+                    root.current-page = "settings";
+                }
+            }
+
+            MenuItem {
+                title: @tr("About");
+                activated => {
+                    root.current-page = "about";
+                }
+            }
+
+            MenuItem {
+                title: @tr("Exit");
+                activated => {
+                    root.exit-app();
+                }
+            }
+        }
+    }
+
+    VerticalBox {
+        if (root.current-page == "about"): AboutPage { }
+        if (root.current-page == "home"): HomePage { }
+        if (root.current-page == "settings"): SettingsPage { }
+    }
+}

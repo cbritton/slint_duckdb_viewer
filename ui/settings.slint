@@ -1,0 +1,41 @@
+import {VerticalBox, GridBox, Switch, Palette, GroupBox} from "std-widgets.slint";
+
+export component SettingsPage inherits VerticalBox {
+    GroupBox {
+        title: @tr("Settings");
+        vertical-stretch: 0;
+
+        GridBox {
+            spacing: 20px;
+
+            Text {
+                row: 0;
+                col: 0;
+                text: @tr("Theme Mode");
+            }
+
+            Switch {
+                row: 0;
+                col: 1;
+                text: @tr("Dark Mode");
+                checked: Palette.color-scheme == ColorScheme.dark;
+                toggled => {
+                    Palette.color-scheme = self.checked ? ColorScheme.dark : ColorScheme.light;
+                }
+            }
+
+            Rectangle {
+                row: 0;
+                col: 2;
+                rowspan: 2;
+            }
+
+            // spacer
+            Rectangle {
+                row: 1;
+                col: 0;
+                colspan: 2;
+            }
+        }
+    }
+}

@@ -1,0 +1,25 @@
+
+export global GlobalState {
+    in property <string> filename: "";
+    in property <int> record_count: 0;
+    in property <int> sort_index: -1;
+
+    // 0 for unsorted, 1 for ascending, 2 for descending
+    in property <int> sort_order: 0;
+
+    in-out property <int> page_number: 1;
+    in property <int> max_pages: 1;
+    in-out property <bool> pagination_enabled: false;
+    in-out property <int> page_size: 20;
+    in-out property <bool> page_loading: false;
+    in property <string> duration: "";
+
+    in property <[TableColumn]> column_names: [];
+    in property <[[StandardListViewItem]]> row_data: [];
+
+    in-out property <string> error_message: "";
+    in-out property <bool> has_error: false;
+
+    pure callback update_table_async();
+    pure callback open_file_async();
+}
