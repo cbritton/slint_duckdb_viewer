@@ -8,9 +8,7 @@ This is basically a learning experience with slint and how to interact with Duck
 To keep memory consumption to a minimum, pagination is used to navigate between pages.
 Currently, only CSV and parquet files are supported and this has only been tested on Windows 11.
 
-<video width="320" height="240" controls>
-  <source src="media/slint_duckdb1.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+
+![viwer image](https://github.com/cbritton/slint_duckdb_viewer/blob/main/media/6m_records.png)
 
 #MadeWithSlint
