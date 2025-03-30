@@ -8,4 +8,6 @@ This is basically a learning experience with slint and how to interact with Duck
 To keep memory consumption to a minimum, pagination is used to navigate between pages.
 Currently, only CSV and parquet files are supported and this has only been tested on Windows 11.
 
+[Sample Usage](media/slint_duckdb1.mp4)
+
 #MadeWithSlint
