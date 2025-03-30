@@ -1,0 +1,20 @@
+[package]
+name = "slint-duckdb-file-viewer"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.97"
+chrono = "0.4.40"
+clap = { version = "4.5.32", features = ["derive"] }
+duckdb = { version = "1.2.1", features = ["parquet"] }
+native-dialog = { version = "0.7.0", features = ["windows_dpi_awareness", "windows_visual_styles"] }
+slint = "1.8.0"
+base64 = "0.22.1"
+ctrlc = "3.4.5"
+tokio = { version = "1.44.1", features = ["full"] }
+
+[build-dependencies]
+slint-build = "1.8.0"
